@@ -17,6 +17,7 @@ import traceback
 
 logging.basicConfig(level=logging.INFO)
 
+
 class Screen:
     """
     Screen class of media_screen.
@@ -30,13 +31,15 @@ class Screen:
             mode: 0 - full or 1 - partial, controls the display mode
         """
 
-        self.font64 = ImageFont.truetype(os.path.join(config["fontdir"], config["font"]), 64)
-        self.font60 = ImageFont.truetype(os.path.join(config["fontdir"], config["font"]), 60)
+        self.font64 = ImageFont.truetype(
+            os.path.join(config["fontdir"], config["font"]), 64
+        )
+        self.font60 = ImageFont.truetype(
+            os.path.join(config["fontdir"], config["font"]), 60
+        )
         self.mode = mode
 
-        self.artists_x = 0
-        self.album_x = 0
-        self.track_x = 0
+        self.reset_x_movement()
 
         try:
             self.epd = epd3in7.EPD()
@@ -53,9 +56,7 @@ class Screen:
             epd3in7.epdconfig.module_exit()
 
     def __enter__(self):
-        """
-
-        """
+        """ """
 
         return self
 
@@ -82,8 +83,6 @@ class Screen:
         image.thumbnail((200, 200), Image.ANTIALIAS)
         self.image.paste(image, (0, 0))
 
-        #time.sleep(10)
-
     def update_partial(self, spotify, velocity=0):
         """
         Update screen - partial refresh
@@ -97,17 +96,23 @@ class Screen:
         if self.mode == 0:
             self.clear(1)  # 1 Gray mode
 
-        time_image = Image.new('1', (200, 80), 255)
+        time_image = Image.new("1", (200, 80), 255)
         time_draw = ImageDraw.Draw(time_image)
         time_draw.rectangle((20, 8, 200, 272), fill=255)
         time_draw.text((20, 8), time.strftime("%H:%M"), font=self.font64, fill=0)
 
-        music_image = Image.new('1', (280, 200), 255)
+        music_image = Image.new("1", (280, 200), 255)
         self.draw()  # draw blank first, make nicer
 
-        music_image, self.artists_x = self.draw_music_text(music_image, self.artists_x, spotify.artists, 0, velocity)
-        music_image, self.album_x = self.draw_music_text(music_image, self.album_x, spotify.album, 70, velocity)
-        music_image, self.track_x = self.draw_music_text(music_image, self.track_x, spotify.track, 140, velocity)
+        music_image, self.artists_x = self.draw_music_text(
+            music_image, self.artists_x, spotify.artists, 0, velocity
+        )
+        music_image, self.album_x = self.draw_music_text(
+            music_image, self.album_x, spotify.album, 70, velocity
+        )
+        music_image, self.track_x = self.draw_music_text(
+            music_image, self.track_x, spotify.track, 140, velocity
+        )
 
         self.image.paste(time_image, (0, 200))
         self.image.paste(music_image, (210, 0))
@@ -120,12 +125,12 @@ class Screen:
             -music_image: music image object
             -obj: objects x position
             -text: text to draw
-            y_position: text's y-position
-            velocity: velocity of moving text if needed, pixels/refresh
+            -y_position: text's y-position
+            -velocity: velocity of moving text if needed, pixels/refresh
         """
 
         music_draw = ImageDraw.Draw(music_image)
-        music_draw.rectangle((0, y_position, 280, y_position+60), fill=255)
+        music_draw.rectangle((0, y_position, 280, y_position + 60), fill=255)
 
         music_x, _ = music_draw.textsize(text, font=self.font60)
         if music_x > 280:
@@ -138,7 +143,6 @@ class Screen:
 
         return music_image, obj
 
-
     def draw(self):
         """
         Draw to screen based on current display mode.
@@ -150,7 +154,9 @@ class Screen:
         else:
             self.epd.display_4Gray(self.epd.getbuffer_4Gray(self.image))
 
-        self.image = self.image.rotate(180)  # rotate back (not efficient, find better way later)
+        self.image = self.image.rotate(
+            180
+        )  # rotate back (not efficient, find better way later)
 
     def clear(self, mode=0):
         """
@@ -169,3 +175,12 @@ class Screen:
 
         logging.info("Goto Sleep...")
         self.epd.sleep()
+
+    def reset_x_movement(self):
+        """
+        Reset the x_movement of text.
+        """
+
+        self.artists_x = 0
+        self.album_x = 0
+        self.track_x = 0

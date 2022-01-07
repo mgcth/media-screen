@@ -21,9 +21,7 @@ def main():
         while True:
             if spotify.check_if_new_track():
                 screen.update_full(spotify)
-                screen.artists_x = 0
-                screen.album_x = 0
-                screen.track_x = 0
+                screen.reset_x_movement()
                 screen.draw()
 
             screen.update_partial(spotify, 20)
