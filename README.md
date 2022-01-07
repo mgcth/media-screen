@@ -1,5 +1,5 @@
 # media screen
-Python code to fetch Spotify data of currently playing track and update a Raspberry Pi E ink display based on that data.
+Python code to fetch Spotify data of currently playing track and update a Raspberry Pi e-ink display based on that data.
 
 The `config.json` file should look like:
 ```
@@ -19,3 +19,5 @@ The `config.json` file should look like:
     }
 }
 ```
+## Requirements
+This package works with a Waveshare e-ink display (HAT). For install instructions go to: https://www.waveshare.com/wiki/3.7inch_e-Paper_HAT. These packages are not included in the requirements.txt file.
