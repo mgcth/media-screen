@@ -39,7 +39,9 @@ class Screen:
         )
         self.mode = mode
 
-        self.reset_x_movement()
+        self.artists_x = 0
+        self.album_x = 0
+        self.track_x = 0
 
         try:
             self.epd = epd3in7.EPD()
@@ -64,6 +66,11 @@ class Screen:
         """
         Soft destruction of object.
         """
+
+        self.clear()
+
+        logging.info("Goto Sleep...")
+        self.epd.sleep()
 
         logging.info("Shutdown screen")
         epd3in7.epdconfig.module_exit()
@@ -102,7 +109,7 @@ class Screen:
         time_draw.text((20, 8), time.strftime("%H:%M"), font=self.font64, fill=0)
 
         music_image = Image.new("1", (280, 200), 255)
-        self.draw()  # draw blank first, make nicer
+        # self.draw()  # draw blank first, make nicer
 
         music_image, self.artists_x = self.draw_music_text(
             music_image, self.artists_x, spotify.artists, 0, velocity
