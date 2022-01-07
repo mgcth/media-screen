@@ -11,6 +11,7 @@ config = config["spotify"]
 KILO = 1000
 MEGA = 1000000
 
+
 class Spotify:
     """
     Spotify class of media_screen
@@ -30,7 +31,7 @@ class Spotify:
             redirect_uri=config["redirecturi"],
             scope=config["scope"],
             open_browser=False,
-            username=config["user"]
+            username=config["user"],
         )
         self.country = config["country"]
         self.client = spotipy.client.Spotify(client_credentials_manager=credentials)
@@ -43,7 +44,9 @@ class Spotify:
 
         self.current_item = self.client.currently_playing(self.country)
         self.isrc = self.current_item["item"]["external_ids"]["isrc"]
-        self.artists = self.current_item["item"]["artists"][0]["name"]  # first artist for now
+        self.artists = self.current_item["item"]["artists"][0][
+            "name"
+        ]  # first artist for now
         self.album = self.current_item["item"]["album"]["name"]
         self.track = self.current_item["item"]["name"]
 
@@ -64,7 +67,9 @@ class Spotify:
         Download the track album cover image and hold in memory.
         """
 
-        image_details = self.current_item["item"]["album"]["images"][1]  # second image size
+        image_details = self.current_item["item"]["album"]["images"][
+            1
+        ]  # second image size
         url = image_details["url"]
         self.image_size = image_details["width"], image_details["height"]
         response = requests.get(url)
