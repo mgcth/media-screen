@@ -58,9 +58,9 @@ class Spotify:
         self.duration = self.current_item["item"]["duration_ms"]
         self.progress = self.current_item["progress_ms"]
 
-        self.time = time.time_ns() / MEGA  # ns to ms
-        self.track_end_time = self.time + self.duration
-        self.time_delay = self.time + self.delay
+        current_time = self.get_time()
+        self.track_end_time = current_time + self.duration
+        self.time_delay = current_time + self.delay
 
     def get_track_image(self):
         """
@@ -86,7 +86,7 @@ class Spotify:
         """
 
         new = False
-        current_time = time.time_ns() / MEGA
+        current_time = self.get_time()
 
         if current_time > self.time_delay:
             self.time_delay = current_time + self.delay
@@ -113,3 +113,10 @@ class Spotify:
         self.get_current_item()
         self.get_track_image()
         self.get_track_time()
+
+    def get_time(self):
+        """
+        Get current time in ms
+        """
+
+        return time.time_ns() / MEGA  # ns to ms
