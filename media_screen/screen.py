@@ -1,6 +1,7 @@
 import sys
 import os
 import time
+from lastfm import LastFM
 from config import config
 
 
@@ -23,6 +24,9 @@ KILO = 1000
 MEGA = 1000000
 
 
+lastfm = LastFM()
+
+
 class Screen:
     """
     Screen class of media_screen.
@@ -36,9 +40,7 @@ class Screen:
             mode: 0 - full or 1 - partial, controls the display mode
         """
 
-        self.font60 = ImageFont.truetype(
-            os.path.join(config["fontdir"], config["font"]), 60
-        )
+        self.font60 = ImageFont.truetype(config["font"], 60)
         self.mode = mode
         self.reset_x_movement()
         self.reset_time()
@@ -100,6 +102,12 @@ class Screen:
         time_draw.rectangle((20, 8, 200, 272), fill=255)
         time_draw.text((20, 8), time.strftime("%H:%M"), font=self.font60, fill=0)
 
+        lastfm.get_currently_playing()
+        play_count_image = Image.new("1", (200, 80), 255)
+        play_count_draw = ImageDraw.Draw(play_count_image)
+        play_count_draw.rectangle((20, 8, 200, 272), fill=255)
+        play_count_draw.text((20, 8), str(lastfm.count), font=self.font60, fill=0)
+
         music_image = Image.new("1", (480, 200), 255)
 
         music_image, self.artists_x = self.slide_music_text(
@@ -112,6 +120,7 @@ class Screen:
             music_image, self.track_x, spotify.track, 140, velocity
         )
 
+        self.image.paste(play_count_image, (80, 200))
         self.image.paste(time_image, (280, 200))
         self.image.paste(music_image, (0, 0))
 
@@ -152,7 +161,6 @@ class Screen:
 
         # want to update time_delay below because draw can take some time
         if self.get_time() > self.time_delay:
-            print("HERE")
             self.epd.init(mode)  # activate screen for drawing
 
             self.draw_kernel(mode)
