@@ -11,6 +11,7 @@ config = config["spotify"]
 KILO = 1000
 MEGA = 1000000
 
+
 class Spotify:
     """
     Spotify class of media_screen
@@ -30,7 +31,7 @@ class Spotify:
             redirect_uri=config["redirecturi"],
             scope=config["scope"],
             open_browser=False,
-            username=config["user"]
+            username=config["user"],
         )
         self.country = config["country"]
         self.client = spotipy.client.Spotify(client_credentials_manager=credentials)
@@ -43,7 +44,9 @@ class Spotify:
 
         self.current_item = self.client.currently_playing(self.country)
         self.isrc = self.current_item["item"]["external_ids"]["isrc"]
-        self.artists = self.current_item["item"]["artists"][0]["name"]  # first artist for now
+        self.artists = self.current_item["item"]["artists"][0][
+            "name"
+        ]  # first artist for now
         self.album = self.current_item["item"]["album"]["name"]
         self.track = self.current_item["item"]["name"]
 
@@ -55,16 +58,18 @@ class Spotify:
         self.duration = self.current_item["item"]["duration_ms"]
         self.progress = self.current_item["progress_ms"]
 
-        self.time = time.time_ns() / MEGA  # ns to ms
-        self.track_end_time = self.time + self.duration
-        self.time_delay = self.time + self.delay
+        current_time = self.get_time()
+        self.track_end_time = current_time + self.duration
+        self.time_delay = current_time + self.delay
 
     def get_track_image(self):
         """
         Download the track album cover image and hold in memory.
         """
 
-        image_details = self.current_item["item"]["album"]["images"][1]  # second image size
+        image_details = self.current_item["item"]["album"]["images"][
+            0
+        ]  # get first and largest image size
         url = image_details["url"]
         self.image_size = image_details["width"], image_details["height"]
         response = requests.get(url)
@@ -81,7 +86,7 @@ class Spotify:
         """
 
         new = False
-        current_time = time.time_ns() / MEGA
+        current_time = self.get_time()
 
         if current_time > self.time_delay:
             self.time_delay = current_time + self.delay
@@ -95,7 +100,7 @@ class Spotify:
                 new = True
 
         if current_time > self.track_end_time:
-            self.update
+            self.update()
             new = True
 
         return new
@@ -108,3 +113,10 @@ class Spotify:
         self.get_current_item()
         self.get_track_image()
         self.get_track_time()
+
+    def get_time(self):
+        """
+        Get current time in ms
+        """
+
+        return time.time_ns() / MEGA  # ns to ms
