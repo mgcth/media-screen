@@ -97,18 +97,18 @@ class Screen:
             -velocity: velocity of moving text if needed, pixels/refresh
         """
 
-        time_image = Image.new("1", (200, 80), 255)
+        time_image = Image.new("1", (160, 70), 255)
         time_draw = ImageDraw.Draw(time_image)
-        time_draw.rectangle((20, 8, 200, 272), fill=255)
-        time_draw.text((20, 8), time.strftime("%H:%M"), font=self.font60, fill=0)
+        time_draw.rectangle((0, 8, 160, 70), fill=255)
+        time_draw.text((0, 8), time.strftime("%H:%M"), font=self.font60, fill=0)
 
         lastfm.get_currently_playing()
-        play_count_image = Image.new("1", (200, 80), 255)
+        play_count_image = Image.new("1", (200, 70), 255)
         play_count_draw = ImageDraw.Draw(play_count_image)
-        play_count_draw.rectangle((20, 8, 200, 272), fill=255)
-        play_count_draw.text((20, 8), str(lastfm.count), font=self.font60, fill=0)
+        play_count_draw.rectangle((0, 8, 200, 70), fill=255)
+        play_count_draw.text((0, 8), str(lastfm.count), font=self.font60, fill=0)
 
-        music_image = Image.new("1", (480, 200), 255)
+        music_image = Image.new("1", (480, 210), 255)
 
         music_image, self.artists_x = self.slide_music_text(
             music_image, self.artists_x, spotify.artists, 0, velocity
@@ -120,8 +120,8 @@ class Screen:
             music_image, self.track_x, spotify.track, 140, velocity
         )
 
-        self.image.paste(play_count_image, (80, 200))
-        self.image.paste(time_image, (280, 200))
+        self.image.paste(play_count_image, (0, 210))
+        self.image.paste(time_image, (320, 210))
         self.image.paste(music_image, (0, 0))
 
     def slide_music_text(self, music_image, obj, text, y_position, velocity):
@@ -137,7 +137,7 @@ class Screen:
         """
 
         music_draw = ImageDraw.Draw(music_image)
-        music_draw.rectangle((0, y_position, 480, y_position + 60), fill=255)
+        music_draw.rectangle((0, y_position, 480, y_position + 70), fill=255)
 
         music_x, _ = music_draw.textsize(text, font=self.font60)
         if music_x > 480:
