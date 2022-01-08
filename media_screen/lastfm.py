@@ -2,7 +2,7 @@ import pylast
 from config import config
 
 
-config = ["last.fm"]
+config = config["last.fm"]
 
 
 class LastFM:
@@ -28,5 +28,5 @@ class LastFM:
         Get the currently playing track
         """
 
-        self.track = self.user.user.get_now_playing()
+        self.track = self.user.get_now_playing()
         self.count = self.track.get_userplaycount()
