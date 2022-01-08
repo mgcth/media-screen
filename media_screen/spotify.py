@@ -68,8 +68,8 @@ class Spotify:
         """
 
         image_details = self.current_item["item"]["album"]["images"][
-            1
-        ]  # second image size
+            0
+        ]  # get first and largest image size
         url = image_details["url"]
         self.image_size = image_details["width"], image_details["height"]
         response = requests.get(url)
@@ -100,7 +100,7 @@ class Spotify:
                 new = True
 
         if current_time > self.track_end_time:
-            self.update
+            self.update()
             new = True
 
         return new

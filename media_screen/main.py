@@ -11,22 +11,21 @@ def main():
     spotify = Spotify()
     spotify.update()
 
-    screen = Screen()
-    with screen as s:
+    eink_screen = Screen()
+    with eink_screen as screen:
         screen.update_full(spotify)
-        screen.draw()
+        screen.draw(0)
         screen.update_partial(spotify)
-        screen.draw()
+        screen.draw(2)
 
         while True:
             if spotify.check_if_new_track():
                 screen.update_full(spotify)
                 screen.reset_x_movement()
-                screen.draw()
+                screen.draw(0)
 
             screen.update_partial(spotify, 20)
-            screen.draw()
-            time.sleep(0.1)
+            screen.draw(2)
 
 
 def init():

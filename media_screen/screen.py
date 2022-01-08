@@ -37,15 +37,21 @@ class Screen:
         self.font60 = ImageFont.truetype(
             os.path.join(config["fontdir"], config["font"]), 60
         )
+        self.font30 = ImageFont.truetype(
+            os.path.join(config["fontdir"], config["font"]), 30
+        )
         self.mode = mode
+        self.reset_x_movement()
 
-        self.artists_x = 0
-        self.album_x = 0
-        self.track_x = 0
+    def __enter__(self):
+        """
+        Create screen and its image.
+        """
 
         try:
-            self.epd = epd3in7.EPD()
             logging.info("Initialise")
+            self.epd = epd3in7.EPD()
+
             self.clear()
 
             self.image = Image.new("1", (self.epd.height, self.epd.width), 255)
@@ -54,26 +60,17 @@ class Screen:
             logging.info(e)
 
         except KeyboardInterrupt:
-            logging.info("ctrl + c")
-            epd3in7.epdconfig.module_exit()
-
-    def __enter__(self):
-        """ """
+            self.shutdown("ctrl + c")
 
         return self
 
     def __exit__(self, type, value, traceback):
         """
-        Soft destruction of object.
+        Shutdown screen.
         """
 
         self.clear()
-
-        logging.info("Goto Sleep...")
-        self.epd.sleep()
-
-        logging.info("Shutdown screen")
-        epd3in7.epdconfig.module_exit()
+        self.sleep()
 
     def update_full(self, spotify):
         """
@@ -84,7 +81,6 @@ class Screen:
         """
 
         logging.info("Draw track art")
-        self.clear()
 
         image = ImageOps.grayscale(spotify.image)
         image.thumbnail((200, 200), Image.ANTIALIAS)
@@ -109,7 +105,7 @@ class Screen:
         time_draw.text((20, 8), time.strftime("%H:%M"), font=self.font64, fill=0)
 
         music_image = Image.new("1", (280, 200), 255)
-        # self.draw()  # draw blank first, make nicer
+        self.draw(0)  # draw blank first, make nicer
 
         music_image, self.artists_x = self.draw_music_text(
             music_image, self.artists_x, spotify.artists, 0, velocity
@@ -150,9 +146,12 @@ class Screen:
 
         return music_image, obj
 
-    def draw(self):
+    def draw(self, delay=5):
         """
         Draw to screen based on current display mode.
+
+        Input:
+            -delay: sleep for this amount of seconds after draw
         """
 
         self.image = self.image.rotate(180)
@@ -164,6 +163,13 @@ class Screen:
         self.image = self.image.rotate(
             180
         )  # rotate back (not efficient, find better way later)
+
+        if delay >= 5:
+            self.sleep()  # put to sleep after each draw if delay larger than
+            time.sleep(delay)
+            self.epd.init(self.mode)
+        else:
+            time.sleep(delay)
 
     def clear(self, mode=0):
         """
@@ -182,6 +188,17 @@ class Screen:
 
         logging.info("Goto Sleep...")
         self.epd.sleep()
+
+    def shutdown(self, text="Shutdown screen"):
+        """
+        Shutdown screen.
+
+        Input:
+            -text: text to log
+        """
+
+        logging.info(text)
+        epd3in7.epdconfig.module_exit()
 
     def reset_x_movement(self):
         """
