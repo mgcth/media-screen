@@ -112,9 +112,9 @@ class Screen:
         time_draw.text((0, 8), time.strftime("%H:%M"), font=self.font60, fill=0)
 
         lastfm.get_currently_playing()
-        play_count_image = Image.new("1", (200, 70), 255)
+        play_count_image = Image.new("1", (150, 70), 255)
         play_count_draw = ImageDraw.Draw(play_count_image)
-        play_count_draw.rectangle((0, 8, 200, 70), fill=255)
+        play_count_draw.rectangle((0, 8, 150, 70), fill=255)
         play_count_draw.text((0, 8), str(lastfm.count), font=self.font60, fill=0)
 
         liked_image = Image.new("1", (70, 70), 255)
