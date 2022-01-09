@@ -1,6 +1,8 @@
 import sys
 import os
 import time
+from io import BytesIO
+import requests
 from lastfm import LastFM
 from config import config
 
@@ -58,6 +60,14 @@ class Screen:
 
             self.image = Image.new("1", (self.epd.height, self.epd.width), 255)
 
+            response = requests.get(config["icon_liked"])
+            self.liked_icon = Image.open(BytesIO(response.content)).convert("RGBA")
+            background = Image.new("RGBA", self.liked_icon.size, (255, 255, 255))
+            self.liked_icon = Image.alpha_composite(background, self.liked_icon)
+            self.liked_icon = ImageOps.grayscale(self.liked_icon)
+            self.liked_icon.thumbnail((65, 65), Image.ANTIALIAS)
+            self.liked_icon.save("tmp.png", "PNG")
+
         except IOError as e:
             logging.info(e)
 
@@ -108,6 +118,10 @@ class Screen:
         play_count_draw.rectangle((0, 8, 200, 70), fill=255)
         play_count_draw.text((0, 8), str(lastfm.count), font=self.font60, fill=0)
 
+        liked_image = Image.new("1", (70, 70), 255)
+        if lastfm.count > 200:
+            liked_image.paste(self.liked_icon, (0, 10))
+
         music_image = Image.new("1", (480, 210), 255)
 
         music_image, self.artists_x = self.slide_music_text(
@@ -120,7 +134,8 @@ class Screen:
             music_image, self.track_x, spotify.track, 140, velocity
         )
 
-        self.image.paste(play_count_image, (0, 210))
+        self.image.paste(liked_image, (0, 210))
+        self.image.paste(play_count_image, (70, 210))
         self.image.paste(time_image, (320, 210))
         self.image.paste(music_image, (0, 0))
 

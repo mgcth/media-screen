@@ -6,7 +6,8 @@ The `config.json` file should look like:
 {
     "screen": {
         "libdir": "path/to/lib",
-        "font": "path/to/font.ttf/ttc"
+        "font": "path/to/font.ttf/ttc",
+        "icon_liked": "https://icon.png"
     },
     "spotify": {
         "user": "user",
@@ -20,7 +21,7 @@ The `config.json` file should look like:
         "username": "last.fm user name",
         "api_key": "api_key",
         "api_secret": "api_secret"
-    }
+    },
 }
 ```
 
