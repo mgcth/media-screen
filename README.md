@@ -5,9 +5,8 @@ The `config.json` file should look like:
 ```
 {
     "screen": {
-        "fontdir": "path/to/font",
         "libdir": "path/to/lib",
-        "font": "path/to/font.ttc"
+        "font": "path/to/font.ttf/ttc"
     },
     "spotify": {
         "user": "user",
@@ -17,7 +16,13 @@ The `config.json` file should look like:
         "scope": "comma-separated-scope",
         "country": "ISO country code"
     }
+    "last.fm": {
+        "username": "last.fm user name",
+        "api_key": "api_key",
+        "api_secret": "api_secret"
+    }
 }
 ```
+
 ## Requirements
 This package works with a Waveshare e-ink display (HAT). For install instructions go to: https://www.waveshare.com/wiki/3.7inch_e-Paper_HAT. These packages are not included in the requirements.txt file.
