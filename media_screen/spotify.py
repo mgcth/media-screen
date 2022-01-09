@@ -4,10 +4,14 @@ import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 from PIL import Image
 from io import BytesIO
+import pathlib
+import os
 from config import config
 
-
 config = config["spotify"]
+cache_file = os.path.join(
+    pathlib.Path(__file__).parent.resolve(), ".cache-" + config["user"]
+)
 KILO = 1000
 MEGA = 1000000
 
@@ -32,6 +36,7 @@ class Spotify:
             scope=config["scope"],
             open_browser=False,
             username=config["user"],
+            cache_path=cache_file,
         )
         self.country = config["country"]
         self.client = spotipy.client.Spotify(client_credentials_manager=credentials)
