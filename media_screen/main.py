@@ -33,6 +33,7 @@ def main():
 
             # screen.draw_text(spotify, velocity)
             # screen.draw(1, delay)
+            time.sleep(0.5)
 
 
 def init():
