@@ -1,5 +1,9 @@
 import json
+import pathlib
+import os
 
 
-with open("config.json", "r") as file:
-    config = json.load(file)
+file = os.path.join(pathlib.Path(__file__).parent.resolve(), "config.json")
+
+with open(file, "r") as f:
+    config = json.load(f)
