@@ -94,8 +94,8 @@ class Screen:
         logging.info("Draw track art")
 
         image = ImageOps.grayscale(spotify.image)
-        image.thumbnail((200, 200), Image.ANTIALIAS)
-        self.image.paste(image, (0, 0))
+        image.thumbnail((65, 65), Image.ANTIALIAS)
+        self.image.paste(image, (220, 210))
 
     def draw_text(self, spotify, velocity=0):
         """

@@ -22,6 +22,7 @@ def main():
     eink_screen = Screen()
     with eink_screen as screen:
         screen.draw_text(spotify, 0)
+        screen.draw_cover_art(spotify)
         screen.draw(0, delay)
 
         while True:
@@ -29,6 +30,7 @@ def main():
                 screen.reset_x_movement()
                 screen.reset_time()
                 screen.draw_text(spotify, 0)
+                screen.draw_cover_art(spotify)
                 screen.draw(0, delay)
 
             # screen.draw_text(spotify, velocity)
