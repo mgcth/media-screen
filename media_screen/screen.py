@@ -66,7 +66,6 @@ class Screen:
             self.liked_icon = Image.alpha_composite(background, self.liked_icon)
             self.liked_icon = ImageOps.grayscale(self.liked_icon)
             self.liked_icon.thumbnail((65, 65), Image.ANTIALIAS)
-            self.liked_icon.save("tmp.png", "PNG")
 
         except IOError as e:
             logging.info(e)
