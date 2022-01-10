@@ -93,9 +93,10 @@ class Screen:
 
         logging.info("Draw track art")
 
-        image = ImageOps.grayscale(spotify.image)
-        image.thumbnail((65, 65), Image.ANTIALIAS)
-        self.image.paste(image, (220, 210))
+        if spotify.item_ok:
+            image = ImageOps.grayscale(spotify.image)
+            image.thumbnail((65, 65), Image.ANTIALIAS)
+            self.image.paste(image, (220, 210))
 
     def draw_text(self, spotify, velocity=0):
         """
@@ -123,16 +124,16 @@ class Screen:
                 liked_image.paste(self.liked_icon, (0, 10))
 
         music_image = Image.new("1", (480, 210), 255)
-
-        music_image, self.artists_x = self.slide_music_text(
-            music_image, self.artists_x, spotify.artists, 0, velocity
-        )
-        music_image, self.album_x = self.slide_music_text(
-            music_image, self.album_x, spotify.album, 70, velocity
-        )
-        music_image, self.track_x = self.slide_music_text(
-            music_image, self.track_x, spotify.track, 140, velocity
-        )
+        if spotify.item_ok:
+            music_image, self.artists_x = self.slide_music_text(
+                music_image, self.artists_x, spotify.artists, 0, velocity
+            )
+            music_image, self.album_x = self.slide_music_text(
+                music_image, self.album_x, spotify.album, 70, velocity
+            )
+            music_image, self.track_x = self.slide_music_text(
+                music_image, self.track_x, spotify.track, 140, velocity
+            )
 
         self.image.paste(liked_image, (0, 210))
         self.image.paste(play_count_image, (70, 210))
