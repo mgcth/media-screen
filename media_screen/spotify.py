@@ -21,7 +21,7 @@ class Spotify:
     Spotify class of media_screen
     """
 
-    def __init__(self, delay=10):
+    def __init__(self, delay=30):
         """
         Initialise the Spotify class and set authorisation. First run saves to cache and requires user input.
 
