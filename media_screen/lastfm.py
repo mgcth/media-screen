@@ -36,6 +36,11 @@ class LastFM:
         Get the currently playing track
         """
 
-        self.track = self.user.get_now_playing()
-        if self.track != None:
-            self.count = self.track.get_userplaycount()
+        try:
+            self.track = self.user.get_now_playing()
+            if self.track != None:
+                self.count = self.track.get_userplaycount()
+        except pylast.MalformedResponseError as e:
+            print("Last.fm get track error")
+            print(e)
+            self.track = None
