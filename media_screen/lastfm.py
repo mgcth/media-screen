@@ -24,6 +24,7 @@ class LastFM:
                 username=username,
             )
             self.user = pylast.User(username, self.network)
+
         except pylast.PyLastError as e:
             print("Problems connecting to last.fm")
             print(e)
@@ -36,4 +37,5 @@ class LastFM:
         """
 
         self.track = self.user.get_now_playing()
-        self.count = self.track.get_userplaycount()
+        if self.track != None:
+            self.count = self.track.get_userplaycount()
