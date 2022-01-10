@@ -37,7 +37,7 @@ class LastFM:
         Get the currently playing track
         """
 
-        time.sleep(5)
+        time.sleep(5)  # for now, should try to id last.fm and spotify
 
         try:
             self.track = self.user.get_now_playing()
