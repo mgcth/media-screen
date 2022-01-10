@@ -1,3 +1,4 @@
+import time
 import pylast
 from config import config
 
@@ -35,6 +36,8 @@ class LastFM:
         """
         Get the currently playing track
         """
+
+        time.sleep(5)
 
         try:
             self.track = self.user.get_now_playing()
