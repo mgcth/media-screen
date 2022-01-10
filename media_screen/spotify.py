@@ -26,7 +26,7 @@ class Spotify:
         Initialise the Spotify class and set authorisation. First run saves to cache and requires user input.
 
         Input:
-            -delay: api call delay in seconds converted to ms in function
+            delay: api call delay in seconds converted to ms in function
         """
 
         self.delay = delay * KILO  # s to ms
@@ -102,7 +102,7 @@ class Spotify:
         However, we need to call the api if user changes track, do that with a delay.
 
         Output:
-            -new: boolean stating if new track started or not
+            new: boolean stating if new track started or not
         """
 
         new = False

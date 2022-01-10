@@ -88,7 +88,7 @@ class Screen:
         Draw cover art.
 
         Input:
-            -spotify: spotify object
+            spotify: spotify object
         """
 
         logging.info("Draw track art")
@@ -103,8 +103,8 @@ class Screen:
         Draw music text
 
         Input:
-            -spotify: spotify object
-            -velocity: velocity of moving text if needed, pixels/refresh
+            spotify: spotify object
+            velocity: velocity of moving text if needed, pixels/refresh
         """
 
         time_image = Image.new("1", (160, 70), 255)
@@ -145,11 +145,11 @@ class Screen:
         Draw the music information and slide it if too long.
 
         Input:
-            -music_image: music image object
-            -obj: objects x position
-            -text: text to draw
-            -y_position: text's y-position
-            -velocity: velocity of moving text if needed, pixels/refresh
+            music_image: music image object
+            obj: objects x position
+            text: text to draw
+            y_position: text's y-position
+            velocity: velocity of moving text if needed, pixels/refresh
         """
 
         music_draw = ImageDraw.Draw(music_image)
@@ -171,8 +171,8 @@ class Screen:
         Draw to screen based on current display mode.
 
         Input:
-            -mode: mode of drawing, 0 full, 1 partial
-            -delay: time to wait for new draw
+            mode: mode of drawing, 0 full, 1 partial
+            delay: time to wait for new draw
         """
 
         # want to update time_delay below because draw can take some time
@@ -190,7 +190,7 @@ class Screen:
         Drawing kernel.
 
         Input:
-            -mode: mode of drawing
+            mode: mode of drawing
         """
 
         self.image = self.image.rotate(180)
@@ -231,7 +231,7 @@ class Screen:
         Shutdown screen.
 
         Input:
-            -text: text to log
+            text: text to log
         """
 
         logging.info(text)
