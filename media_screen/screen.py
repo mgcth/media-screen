@@ -111,15 +111,16 @@ class Screen:
         time_draw.rectangle((0, 8, 160, 70), fill=255)
         time_draw.text((0, 8), time.strftime("%H:%M"), font=self.font60, fill=0)
 
-        lastfm.get_currently_playing()
         play_count_image = Image.new("1", (150, 70), 255)
-        play_count_draw = ImageDraw.Draw(play_count_image)
-        play_count_draw.rectangle((0, 8, 150, 70), fill=255)
-        play_count_draw.text((0, 8), str(lastfm.count), font=self.font60, fill=0)
-
         liked_image = Image.new("1", (70, 70), 255)
-        if lastfm.count > 200:
-            liked_image.paste(self.liked_icon, (0, 10))
+        if lastfm.network != None and lastfm.user != None:
+            lastfm.get_currently_playing()
+            play_count_draw = ImageDraw.Draw(play_count_image)
+            play_count_draw.rectangle((0, 8, 150, 70), fill=255)
+            play_count_draw.text((0, 8), str(lastfm.count), font=self.font60, fill=0)
+
+            if lastfm.count > 200:
+                liked_image.paste(self.liked_icon, (0, 10))
 
         music_image = Image.new("1", (480, 210), 255)
 

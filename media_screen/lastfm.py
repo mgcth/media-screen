@@ -16,12 +16,19 @@ class LastFM:
         """
 
         username = config["username"]
-        self.network = pylast.LastFMNetwork(
-            api_key=config["api_key"],
-            api_secret=config["api_secret"],
-            username=username,
-        )
-        self.user = pylast.User(username, self.network)
+
+        try:
+            self.network = pylast.LastFMNetwork(
+                api_key=config["api_key"],
+                api_secret=config["api_secret"],
+                username=username,
+            )
+            self.user = pylast.User(username, self.network)
+        except pylast.PyLastError as e:
+            print("Problems connecting to last.fm")
+            print(e)
+            self.network = None
+            self.user = None
 
     def get_currently_playing(self):
         """
