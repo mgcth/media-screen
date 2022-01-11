@@ -119,7 +119,7 @@ class Spotify:
         Get item_ok property.
 
         Output:
-            item_ok: Item recieved is OK.
+            item_ok: item recieved is OK.
         """
 
         return self._item_ok
