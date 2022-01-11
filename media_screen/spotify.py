@@ -8,6 +8,7 @@ import pathlib
 import os
 from misc import config, KILO, MEGA
 
+
 config = config["spotify"]
 cache_file = os.path.join(
     pathlib.Path(__file__).parent.resolve(), ".cache-" + config["user"]
@@ -55,6 +56,8 @@ class Spotify:
             self._client = spotipy.client.Spotify(
                 client_credentials_manager=credentials
             )
+
+            self.__update__()
 
         except spotipy.oauth2.SpotifyOauthError as e:
             print("Error during Spotify authentication.")
@@ -113,16 +116,59 @@ class Spotify:
 
         return time.time_ns() / MEGA  # ns to ms
 
+    def __update__(self):
+        """
+        Update object state with one api call.
+        """
+
+        if self._client != None:
+            self.__get_current_item__()
+            self.__get_track_image__()
+            self.__get_track_time__()
+
     @property
     def item_ok(self):
         """
         Get item_ok property.
 
         Output:
-            item_ok: item recieved is OK.
+            item_ok: item recieved is OK
         """
 
         return self._item_ok
+
+    @property
+    def artists(self):
+        """
+        Get artists property.
+
+        Output:
+            artists: artists
+        """
+
+        return self._artists
+
+    @property
+    def album(self):
+        """
+        Get album property.
+
+        Output:
+            album: album
+        """
+
+        return self._album
+
+    @property
+    def track(self):
+        """
+        Get track property.
+
+        Output:
+            track: track
+        """
+
+        return self._track
 
     def check_if_new_track(self):
         """
@@ -142,27 +188,15 @@ class Spotify:
             if current_time > self._time_delay:
 
                 self._time_delay = current_time + self._delay
-
                 previous_track_external_id = self._isrc
-                self.__get_current_item__()
-                current_item_external_id = self._isrc
+                self.update()
 
+                current_item_external_id = self._isrc
                 if previous_track_external_id != current_item_external_id:
-                    self.update()
                     new_track = True
 
-            if current_time > self._track_end_time:
+            elif current_time > self._track_end_time:
                 self.update()
                 new_track = True
 
         return new_track
-
-    def update(self):
-        """
-        Update object state with one api call.
-        """
-
-        if self._client != None:
-            self.__get_current_item__()
-            self.__get_track_image__()
-            self.__get_track_time__()

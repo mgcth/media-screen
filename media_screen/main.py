@@ -1,7 +1,8 @@
-from spotify import Spotify
-from screen import Screen
 import sys
 import time
+from spotify import Spotify
+from lastfm import LastFM
+from screen import Screen
 
 
 def main():
@@ -17,21 +18,17 @@ def main():
         velocity = 0
 
     spotify = Spotify()
-    spotify.update()
 
-    eink_screen = Screen()
-    with eink_screen as screen:
-        screen.draw_text(spotify, 0)
-        screen.draw_cover_art(spotify)
-        screen.draw(0, delay)
+    lastfm = LastFM()
+    lastfm.get_currently_playing()
+
+    with Screen() as screen:
+        screen.draw(0, spotify, lastfm, 0, delay)
 
         while True:
             if spotify.check_if_new_track():
-                screen.reset_x_movement()
-                screen.reset_time()
-                screen.draw_text(spotify, 0)
-                screen.draw_cover_art(spotify)
-                screen.draw(0, delay)
+                lastfm.get_currently_playing()
+                screen.draw(0, spotify, lastfm, 0, delay)
 
             # screen.draw_text(spotify, velocity)
             # screen.draw(1, delay)
