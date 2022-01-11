@@ -6,7 +6,7 @@ from PIL import Image
 from io import BytesIO
 import pathlib
 import os
-from config import config
+from misc import config, KILO, MEGA
 
 config = config["spotify"]
 cache_file = os.path.join(

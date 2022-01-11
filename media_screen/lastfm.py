@@ -1,6 +1,6 @@
 import time
 import pylast
-from config import config
+from misc import config, KILO, MEGA
 
 
 config = config["last.fm"]

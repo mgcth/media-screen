@@ -4,7 +4,7 @@ import time
 from io import BytesIO
 import requests
 from lastfm import LastFM
-from config import config
+from misc import config, KILO, MEGA
 
 
 config = config["screen"]
@@ -20,10 +20,6 @@ import traceback
 
 
 logging.basicConfig(level=logging.INFO)
-
-
-KILO = 1000
-MEGA = 1000000
 
 
 lastfm = LastFM()
