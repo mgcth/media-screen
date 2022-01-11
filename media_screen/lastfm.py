@@ -16,9 +16,10 @@ class LastFM:
         Initialise the class.
         """
 
-        username = config["username"]
+        self._count = None
 
         try:
+            username = config["username"]
             self.network = pylast.LastFMNetwork(
                 api_key=config["api_key"],
                 api_secret=config["api_secret"],
@@ -30,7 +31,6 @@ class LastFM:
             print("Problems connecting to last.fm")
             print(e)
             self.network = None
-            self.user = None
 
     def get_currently_playing(self):
         """
@@ -40,10 +40,20 @@ class LastFM:
         time.sleep(5)  # for now, should try to id last.fm and spotify
 
         try:
-            self.track = self.user.get_now_playing()
-            if self.track != None:
-                self.count = self.track.get_userplaycount()
+            track = self.user.get_now_playing()
+            if track != None:
+                self._count = track.get_userplaycount()
         except pylast.MalformedResponseError as e:
             print("Last.fm get track error")
             print(e)
-            self.track = None
+
+    @property
+    def count(self):
+        """
+        Get item_ok property.
+
+        Output:
+            count: times track has been played
+        """
+
+        return self._count
