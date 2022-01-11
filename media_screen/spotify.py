@@ -26,12 +26,20 @@ class Spotify:
         Initialise the Spotify class and set authorisation. First run saves to cache and requires user input.
 
         Input:
-            delay: api call delay in seconds converted to ms in function
+            delay: api call delay in s converted to ms in function
         """
 
-        self.delay = delay * KILO  # s to ms
-        self.country = config["country"]
-        self.item_ok = False
+        self._item_ok = False
+        self._delay = delay * KILO  # s to ms
+        self._country = config["country"]
+
+        self._item = None
+        self._isrc = None
+        self._artists = None
+        self._album = None
+        self._track = None
+        self._time_delay = None
+        self._track_end_time = None
 
         try:
             credentials = SpotifyOAuth(
@@ -43,57 +51,78 @@ class Spotify:
                 username=config["user"],
                 cache_path=cache_file,
             )
-            self.client = spotipy.client.Spotify(client_credentials_manager=credentials)
+
+            self._client = spotipy.client.Spotify(
+                client_credentials_manager=credentials
+            )
 
         except spotipy.oauth2.SpotifyOauthError as e:
-            print("Error during Spotify authentication")
+            print("Error during Spotify authentication.")
             print(e)
-            self.client = None
+            self._client = None
 
-    def get_current_item(self):
+    def __get_current_item__(self):
         """
         Get current track information.
         """
 
-        self.current_item = self.client.currently_playing(self.country)
-        if self.current_item != None:
-            self.item_ok = True
-            self.isrc = self.current_item["item"]["external_ids"]["isrc"]
-            self.artists = self.current_item["item"]["artists"][0][
+        self._item = self._client.currently_playing(self._country)
+        if self._item != None:
+            self._item_ok = True
+            self._isrc = self._item["item"]["external_ids"]["isrc"]
+            self._artists = self._item["item"]["artists"][0][
                 "name"
             ]  # first artist for now
-            self.album = self.current_item["item"]["album"]["name"]
-            self.track = self.current_item["item"]["name"]
+            self._album = self._item["item"]["album"]["name"]
+            self._track = self._item["item"]["name"]
         else:
             print("Recieved current item is empty")
-            self.item_ok = False
+            self._item_ok = False
 
-    def get_track_time(self):
+    def __get_track_time__(self):
         """
         Get the current track's progress and duration and set track end time.
         """
 
-        if self.item_ok:
-            self.duration = self.current_item["item"]["duration_ms"]
-            self.progress = self.current_item["progress_ms"]
+        if self._item_ok:
+            self.duration = self._item["item"]["duration_ms"]
+            self.progress = self._item["progress_ms"]
 
-            current_time = self.get_time()
-            self.track_end_time = current_time + self.duration
-            self.time_delay = current_time + self.delay
+            current_time = self.__get_time__()
+            self._track_end_time = current_time + self.duration
+            self._time_delay = current_time + self._delay
 
-    def get_track_image(self):
+    def __get_track_image__(self):
         """
         Download the track album cover image and hold in memory.
         """
 
-        if self.item_ok:
-            image_details = self.current_item["item"]["album"]["images"][
+        if self._item_ok:
+            image_details = self._item["item"]["album"]["images"][
                 0
             ]  # get first and largest image size
             url = image_details["url"]
             self.image_size = image_details["width"], image_details["height"]
             response = requests.get(url)
             self.image = Image.open(BytesIO(response.content))
+
+    def __get_time__(self):
+        """
+        Get current time in ms
+        """
+
+        return time.time_ns() / MEGA  # ns to ms
+
+    @property
+    def item_ok(self):
+        """
+        Get item_ok property.
+
+        Output:
+            item_ok: Item recieved is OK.
+        """
+
+        return self._item_ok
 
     def check_if_new_track(self):
         """
@@ -102,44 +131,38 @@ class Spotify:
         However, we need to call the api if user changes track, do that with a delay.
 
         Output:
-            new: boolean stating if new track started or not
+            new_track: boolean stating if new track started or not
         """
 
-        new = False
+        new_track = False
 
-        if self.item_ok:
-            current_time = self.get_time()
+        if self._item_ok:
 
-            if current_time > self.time_delay:
-                self.time_delay = current_time + self.delay
+            current_time = self.__get_time__()
+            if current_time > self._time_delay:
 
-                previous_track_external_id = self.isrc
-                self.get_current_item()
-                current_item_external_id = self.isrc
+                self._time_delay = current_time + self._delay
+
+                previous_track_external_id = self._isrc
+                self.__get_current_item__()
+                current_item_external_id = self._isrc
 
                 if previous_track_external_id != current_item_external_id:
                     self.update()
-                    new = True
+                    new_track = True
 
-            if current_time > self.track_end_time:
+            if current_time > self._track_end_time:
                 self.update()
-                new = True
+                new_track = True
 
-        return new
+        return new_track
 
     def update(self):
         """
-        Update the object with an api call.
+        Update object state with one api call.
         """
 
-        if self.client != None:
-            self.get_current_item()
-            self.get_track_image()
-            self.get_track_time()
-
-    def get_time(self):
-        """
-        Get current time in ms
-        """
-
-        return time.time_ns() / MEGA  # ns to ms
+        if self._client != None:
+            self.__get_current_item__()
+            self.__get_track_image__()
+            self.__get_track_time__()
