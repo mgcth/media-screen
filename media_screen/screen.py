@@ -50,7 +50,7 @@ class Screen:
             logging.info("Initialise")
             self._epd = epd3in7.EPD()
 
-            self.__clear__()
+            self._clear()
 
             self._image = Image.new("1", (self._epd.height, self._epd.width), 255)
 
@@ -65,7 +65,7 @@ class Screen:
             logging.info(e)
 
         except KeyboardInterrupt:
-            self.__shutdown__("ctrl + c")
+            self._shutdown("ctrl + c")
 
         return self
 
@@ -74,10 +74,10 @@ class Screen:
         Shutdown screen.
         """
 
-        self.__clear__()
-        self.__sleep__()
+        self._clear()
+        self._sleep()
 
-    def __draw_cover_art__(self, spotify):
+    def _draw_cover_art(self, spotify):
         """
         Draw cover art.
 
@@ -92,7 +92,7 @@ class Screen:
             image.thumbnail((65, 65), Image.ANTIALIAS)
             self._image.paste(image, (220, 210))
 
-    def __draw_text__(self, spotify, lastfm, velocity=0):
+    def _draw_text(self, spotify, lastfm, velocity=0):
         """
         Draw music text
 
@@ -119,13 +119,13 @@ class Screen:
 
         music_image = Image.new("1", (480, 210), 255)
         if spotify.item_ok:
-            music_image, self._artists_x = self.__slide_music_text__(
+            music_image, self._artists_x = self._slide_music_text(
                 music_image, self._artists_x, spotify.artists, 0, velocity
             )
-            music_image, self._album_x = self.__slide_music_text__(
+            music_image, self._album_x = self._slide_music_text(
                 music_image, self._album_x, spotify.album, 70, velocity
             )
-            music_image, self._track_x = self.__slide_music_text__(
+            music_image, self._track_x = self._slide_music_text(
                 music_image, self._track_x, spotify.track, 140, velocity
             )
 
@@ -134,7 +134,7 @@ class Screen:
         self._image.paste(time_image, (320, 210))
         self._image.paste(music_image, (0, 0))
 
-    def __slide_music_text__(self, music_image, obj, text, y_position, velocity):
+    def _slide_music_text(self, music_image, obj, text, y_position, velocity):
         """
         Draw the music information and slide it if too long.
 
@@ -160,7 +160,7 @@ class Screen:
 
         return music_image, obj
 
-    def __draw_kernel__(self, mode):
+    def _draw_kernel(self, mode):
         """
         Drawing kernel.
 
@@ -172,18 +172,18 @@ class Screen:
 
         if mode == 1:
             logging.info("Partial update")
-            self.__clear__(1)
+            self._clear(1)
             self._epd.display_1Gray(self._epd.getbuffer(self._image))
         else:
             logging.info("Full update")
-            self.__clear__(0)
+            self._clear(0)
             self._epd.display_4Gray(self._epd.getbuffer_4Gray(self._image))
 
         self._image = self._image.rotate(
             180
         )  # rotate back (not efficient, find better way later)
 
-    def __clear__(self, mode=0):
+    def _clear(self, mode=0):
         """
         Clear the screen and set mode.
         """
@@ -193,7 +193,7 @@ class Screen:
         self._epd.init(mode)
         self._epd.Clear(0xFF, mode)
 
-    def __sleep__(self):
+    def _sleep(self):
         """
         Put screen to sleep.
         """
@@ -201,7 +201,7 @@ class Screen:
         logging.info("Goto Sleep...")
         self._epd.sleep()
 
-    def __shutdown__(self, text="Shutdown screen"):
+    def _shutdown(self, text="Shutdown screen"):
         """
         Shutdown screen.
 
@@ -212,14 +212,14 @@ class Screen:
         logging.info(text)
         epd3in7.epdconfig.module_exit()
 
-    def __get_time__(self):
+    def _get_time(self):
         """
         Get current time in ms
         """
 
         return time.time_ns() / MEGA  # ns to ms
 
-    def __reset_x_movement__(self):
+    def _reset_x_movement(self):
         """
         Reset the x_movement of text.
         """
@@ -228,7 +228,7 @@ class Screen:
         self._album_x = 0
         self._track_x = 0
 
-    def __reset_time__(self):
+    def _reset_time(self):
         """
         Reset time variable
         """
@@ -247,17 +247,17 @@ class Screen:
             delay: time to wait for new draw
         """
 
-        self.__draw_text__(spotify, lastfm, velocity)
-        self.__draw_cover_art__(spotify)
-        self.__reset_x_movement__()
-        self.__reset_time__()
+        self._draw_text(spotify, lastfm, velocity)
+        self._draw_cover_art(spotify)
+        self._reset_x_movement()
+        self._reset_time()
 
         # want to update time_delay below because draw can take some time
-        if self.__get_time__() > self._time_delay:
+        if self._get_time() > self._time_delay:
             self._epd.init(mode)  # activate screen for drawing
 
-            self.__draw_kernel__(mode)
+            self._draw_kernel(mode)
 
-            self.__sleep__()  # put screen to sleep
+            self._sleep()  # put screen to sleep
 
-            self._time_delay = self.__get_time__() + delay * KILO
+            self._time_delay = self._get_time() + delay * KILO
