@@ -57,14 +57,14 @@ class Spotify:
                 client_credentials_manager=credentials
             )
 
-            self.__update__()
+            self._update()
 
         except spotipy.oauth2.SpotifyOauthError as e:
             print("Error during Spotify authentication.")
             print(e)
             self._client = None
 
-    def __get_current_item__(self):
+    def _get_current_item(self):
         """
         Get current track information.
         """
@@ -82,7 +82,7 @@ class Spotify:
             print("Recieved current item is empty")
             self._item_ok = False
 
-    def __get_track_time__(self):
+    def _get_track_time(self):
         """
         Get the current track's progress and duration and set track end time.
         """
@@ -91,11 +91,11 @@ class Spotify:
             self.duration = self._item["item"]["duration_ms"]
             self.progress = self._item["progress_ms"]
 
-            current_time = self.__get_time__()
+            current_time = self._get_time()
             self._track_end_time = current_time + self.duration
             self._time_delay = current_time + self._delay
 
-    def __get_track_image__(self):
+    def _get_track_image(self):
         """
         Download the track album cover image and hold in memory.
         """
@@ -109,22 +109,22 @@ class Spotify:
             response = requests.get(url)
             self.image = Image.open(BytesIO(response.content))
 
-    def __get_time__(self):
+    def _get_time(self):
         """
         Get current time in ms
         """
 
         return time.time_ns() / MEGA  # ns to ms
 
-    def __update__(self):
+    def _update(self):
         """
         Update object state with one api call.
         """
 
         if self._client != None:
-            self.__get_current_item__()
-            self.__get_track_image__()
-            self.__get_track_time__()
+            self._get_current_item()
+            self._get_track_image()
+            self._get_track_time()
 
     @property
     def item_ok(self):
@@ -184,19 +184,19 @@ class Spotify:
 
         if self._item_ok:
 
-            current_time = self.__get_time__()
+            current_time = self._get_time()
             if current_time > self._time_delay:
 
                 self._time_delay = current_time + self._delay
                 previous_track_external_id = self._isrc
-                self.update()
+                self._update()
 
                 current_item_external_id = self._isrc
                 if previous_track_external_id != current_item_external_id:
                     new_track = True
 
             elif current_time > self._track_end_time:
-                self.update()
+                self._update()
                 new_track = True
 
         return new_track
