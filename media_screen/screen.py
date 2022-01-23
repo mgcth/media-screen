@@ -110,12 +110,12 @@ class Screen:
         play_count_draw = ImageDraw.Draw(play_count_image)
         play_count_draw.rectangle((0, 8, 150, 70), fill=255)
 
-        liked_image = Image.new("1", (70, 70), 255)
+        liked_image = Image.new("1", (65, 65), 255)
         if lastfm.count != None:
             play_count_draw.text((0, 8), str(lastfm.count), font=self._font60, fill=0)
 
             if lastfm.count > 200:
-                liked_image.paste(self.liked_icon, (0, 10))
+                liked_image.paste(self.liked_icon, (0, 0))
 
         music_image = Image.new("1", (480, 210), 255)
         if spotify.item_ok:
