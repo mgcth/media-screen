@@ -27,3 +27,6 @@ The `config.json` file should look like:
 
 ## Requirements
 This package works with a Waveshare e-ink display (HAT). For install instructions go to: https://www.waveshare.com/wiki/3.7inch_e-Paper_HAT. These packages are not included in the requirements.txt file.
+
+## Example
+![Example image of the screen](https://mladen.gibanica.net/posts/media_screen/20220130_111004.jpg)
