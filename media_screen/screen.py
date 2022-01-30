@@ -90,7 +90,7 @@ class Screen:
         if spotify.item_ok:
             image = ImageOps.grayscale(spotify.image)
             image.thumbnail((65, 65), Image.ANTIALIAS)
-            self._image.paste(image, (220, 210))
+            self._image.paste(image, (235, 210))
 
     def _draw_text(self, spotify, lastfm, velocity=0):
         """
