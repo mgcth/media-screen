@@ -26,12 +26,16 @@ def main():
         screen.draw(0, spotify, lastfm, 0, delay)
 
         while True:
-            if spotify.check_if_new_track():
-                lastfm.get_currently_playing()
-                screen.draw(0, spotify, lastfm, 0, delay)
+            try:
+                if spotify.check_if_new_track():
+                    lastfm.get_currently_playing()
+                    screen.draw(0, spotify, lastfm, 0, delay)
 
-            # screen.draw_text(spotify, velocity)
-            # screen.draw(1, delay)
+                # screen.draw_text(spotify, velocity)
+                # screen.draw(1, delay)
+            except:
+                print("Error.")
+
             time.sleep(0.5)
 
 
