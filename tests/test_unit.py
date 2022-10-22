@@ -1,11 +1,10 @@
 from unittest.mock import patch
-from media_screen.main import init
+from media_screen.main import main
 
 
-@patch("media_screen.main.main")
-def test_init(mock_main):
+def test_main():
     """
     Dummy test.
     """
-    init()
-    mock_main.assert_called_once()
+    main()
+    assert True
