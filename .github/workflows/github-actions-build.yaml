@@ -20,6 +20,8 @@ jobs:
       - name: Test with pytest
         run: |
           coverage json
+      - name: Export summary stats
+        run: |
           export TOTAL=$(python -c "import json;print(json.load(open('coverage.json'))['totals']['percent_covered_display'])")
           echo "total=$TOTAL" >> $GITHUB_ENV
       - name: Coverage badge
