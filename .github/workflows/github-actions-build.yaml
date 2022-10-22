@@ -19,6 +19,7 @@ jobs:
           pip install -e ".[test]"
       - name: Test with pytest
         run: |
+          pytest
           coverage json
       - name: Export summary stats
         run: |
