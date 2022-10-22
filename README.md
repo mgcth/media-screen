@@ -1,6 +1,7 @@
-[![lint](https://github.com/mgcth/media_screen/actions/workflows/github-actions-lint.yml/badge.svg?branch=master)](https://github.com/mgcth/media_screen/actions/workflows/github-actions-lint.yml)
 [![build](https://github.com/mgcth/media_screen/actions/workflows/github-actions-build.yml/badge.svg?branch=master)](https://github.com/mgcth/media_screen/actions/workflows/github-actions-build.yml)
 ![coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/mgcth/a732c5d7edae26bdcc6aafdc74560037/raw/badge.json)
+[![lint](https://github.com/mgcth/media_screen/actions/workflows/github-actions-lint.yml/badge.svg?branch=master)](https://github.com/mgcth/media_screen/actions/workflows/github-actions-lint.yml)
+![code style](https://img.shields.io/badge/code%20style-black-black)
 
 # media screen
 
