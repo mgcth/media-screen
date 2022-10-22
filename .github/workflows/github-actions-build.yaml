@@ -19,7 +19,9 @@ jobs:
           pip install -e ".[test]"
       - name: Test with pytest
         run: |
-          pytest
+          coverage json
+          export TOTAL=$(python -c "import json;print(json.load(open('coverage.json'))['totals']['percent_covered_display'])")
+          echo "total=$TOTAL" >> $GITHUB_ENV
       - name: Coverage badge
         uses: schneegans/dynamic-badges-action@v1.6.0
         with:
@@ -27,5 +29,7 @@ jobs:
           gistID: a732c5d7edae26bdcc6aafdc74560037
           filename: badge.json
           label: Coverage
-          message: World
-          color: orange
+          message: ${{ env.total }}%
+          minColorRange: 50
+          maxColorRange: 90
+          valColorRange: ${{ env.total }}
