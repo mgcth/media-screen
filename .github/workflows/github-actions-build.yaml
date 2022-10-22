@@ -20,3 +20,12 @@ jobs:
       - name: Test with pytest
         run: |
           pytest
+      - name: Coverage badge
+        uses: schneegans/dynamic-badges-action@v1.6.0
+        with:
+          auth: ${{ secrets.BADGE_SECRET }}
+          gistID: a732c5d7edae26bdcc6aafdc74560037
+          filename: badge.json
+          label: Hello
+          message: World
+          color: orange
