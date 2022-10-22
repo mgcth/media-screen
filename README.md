@@ -5,7 +5,7 @@
 
 # media screen
 
-Python code to fetch Spotify data of currently playing track and update a Raspberry Pi e-ink display based on that data.
+Package to show some last.fm statistics on a Raspberry Pi e-ink screen.
 
 The `config.json` file should look like:
 ```json
