@@ -6,7 +6,7 @@ from PIL import Image
 from io import BytesIO
 import pathlib
 import os
-from misc import config, KILO, MEGA
+from media_screen.misc import config, KILO, MEGA
 
 
 config = config["spotify"]

@@ -1,8 +1,7 @@
 import sys
 import time
-from spotify import Spotify
-from lastfm import LastFM
-from screen import Screen
+from media_screen.lastfm import LastFM
+from media_screen.screen import Screen
 
 
 def main():

@@ -3,7 +3,7 @@ import os
 import time
 from io import BytesIO
 import requests
-from misc import config, KILO, MEGA
+from media_screen.misc import config, KILO, MEGA
 
 
 config = config["screen"]

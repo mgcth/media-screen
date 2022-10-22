@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "media_screen"
 version = "0.1.0"
-description = "Show last.fm media info on a Raspberry Pi e-ink screen. ."
+description = "Show last.fm media info on a Raspberry Pi e-ink screen."
 license = { text = "MIT" }
 readme = "README.md"
 authors = [
@@ -14,7 +14,6 @@ authors = [
 requires-python = ">=3.7"
 dependencies = [
     "requests ~= 2.27",
-    "spotipy ~= 2.10",
     "Pillow ~= 9.0",
     "pylast ~= 4.5"
 ]
