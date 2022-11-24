@@ -12,7 +12,14 @@ authors = [
     { name = "Mladen Gibanica", email = "11275336+mgcth@users.noreply.github.com" },
 ]
 requires-python = ">=3.7"
-dependencies = ["requests ~= 2.27", "Pillow ~= 9.0", "pylast ~= 4.5"]
+dependencies = [
+    "requests ~= 2.27",
+    "Pillow ~= 9.0",
+    "pylast ~= 5.1",
+    "numpy ~= 1.19",
+    "RPi.GPIO ~= 0.7",
+    "spidev ~= 3.5",
+]
 
 [project.optional-dependencies]
 lint = [
