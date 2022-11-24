@@ -1,39 +1,32 @@
-import sys
+"""Screen module."""
 import os
+import sys
 import time
-from io import BytesIO
 import requests
-from media_screen.misc import config, KILO, MEGA
+import logging
+from io import BytesIO
+from waveshare_epd import epd3in7
+from media_screen.misc import CONFIG, KILO, MEGA
+from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 
-config = config["screen"]
+config = CONFIG["screen"]
 
 if os.path.exists(config["libdir"]):
     sys.path.append(config["libdir"])
-
-import logging
-from waveshare_epd import epd3in7
-import time
-from PIL import Image, ImageDraw, ImageFont, ImageOps
-import traceback
-
 
 logging.basicConfig(level=logging.INFO)
 
 
 class Screen:
-    """
-    Screen class of media_screen.
-    """
+    """Screen class of media_screen."""
 
     def __init__(self, mode=0):
-        """
-        Initialise screen class.
+        """Initialise screen class.
 
         Input:
             mode: 0 - full or 1 - partial, controls the display mode
         """
-
         self._font60 = ImageFont.truetype(config["font"], 60)
         self._mode = mode
         self._artists_x = 0
@@ -42,10 +35,7 @@ class Screen:
         self._time_delay = 0
 
     def __enter__(self):
-        """
-        Create screen and its image.
-        """
-
+        """Create screen and its image."""
         try:
             logging.info("Initialise")
             self._epd = epd3in7.EPD()
@@ -70,37 +60,30 @@ class Screen:
         return self
 
     def __exit__(self, type, value, traceback):
-        """
-        Shutdown screen.
-        """
-
+        """Shutdown screen."""
         self._clear()
         self._sleep()
 
-    def _draw_cover_art(self, spotify):
-        """
-        Draw cover art.
+    def _draw_cover_art(self, lastfm):
+        """Draw cover art.
 
         Input:
-            spotify: spotify object
+            lastfm: lastfm object
         """
-
         logging.info("Draw track art")
 
-        if spotify.item_ok:
-            image = ImageOps.grayscale(spotify.image)
+        if lastfm.item_ok:
+            image = ImageOps.grayscale(lastfm.image)
             image.thumbnail((65, 65), Image.ANTIALIAS)
             self._image.paste(image, (235, 210))
 
-    def _draw_text(self, spotify, lastfm, velocity=0):
-        """
-        Draw music text
+    def _draw_text(self, lastfm, velocity=0):
+        """Draw music text.
 
         Input:
-            spotify: spotify object
+            lastfm: lastfm object
             velocity: velocity of moving text if needed, pixels/refresh
         """
-
         time_image = Image.new("1", (160, 70), 255)
         time_draw = ImageDraw.Draw(time_image)
         time_draw.rectangle((0, 8, 160, 70), fill=255)
@@ -118,15 +101,15 @@ class Screen:
                 liked_image.paste(self.liked_icon, (0, 0))
 
         music_image = Image.new("1", (480, 210), 255)
-        if spotify.item_ok:
+        if lastfm.item_ok:
             music_image, self._artists_x = self._slide_music_text(
-                music_image, self._artists_x, spotify.artists, 0, velocity
+                music_image, self._artists_x, lastfm.artists, 0, velocity
             )
             music_image, self._album_x = self._slide_music_text(
-                music_image, self._album_x, spotify.album, 70, velocity
+                music_image, self._album_x, lastfm.album, 70, velocity
             )
             music_image, self._track_x = self._slide_music_text(
-                music_image, self._track_x, spotify.track, 140, velocity
+                music_image, self._track_x, lastfm.track, 140, velocity
             )
 
         self._image.paste(liked_image, (0, 210))
@@ -135,8 +118,7 @@ class Screen:
         self._image.paste(music_image, (0, 0))
 
     def _slide_music_text(self, music_image, obj, text, y_position, velocity):
-        """
-        Draw the music information and slide it if too long.
+        """Draw the music information and slide it if too long.
 
         Input:
             music_image: music image object
@@ -145,7 +127,6 @@ class Screen:
             y_position: text's y-position
             velocity: velocity of moving text if needed, pixels/refresh
         """
-
         music_draw = ImageDraw.Draw(music_image)
         music_draw.rectangle((0, y_position, 480, y_position + 70), fill=255)
 
@@ -161,13 +142,11 @@ class Screen:
         return music_image, obj
 
     def _draw_kernel(self, mode):
-        """
-        Drawing kernel.
+        """Drawing kernel.
 
         Input:
             mode: mode of drawing
         """
-
         self._image = self._image.rotate(180)
 
         if mode == 1:
@@ -184,71 +163,51 @@ class Screen:
         )  # rotate back (not efficient, find better way later)
 
     def _clear(self, mode=0):
-        """
-        Clear the screen and set mode.
-        """
-
+        """Clear the screen and set mode."""
         logging.info("Clear")
         self._mode = mode
         self._epd.init(mode)
         self._epd.Clear(0xFF, mode)
 
     def _sleep(self):
-        """
-        Put screen to sleep.
-        """
-
+        """Put screen to sleep."""
         logging.info("Goto Sleep...")
         self._epd.sleep()
 
     def _shutdown(self, text="Shutdown screen"):
-        """
-        Shutdown screen.
+        """Shutdown screen.
 
         Input:
             text: text to log
         """
-
         logging.info(text)
         epd3in7.epdconfig.module_exit()
 
     def _get_time(self):
-        """
-        Get current time in ms
-        """
-
+        """Get current time in ms."""
         return time.time_ns() / MEGA  # ns to ms
 
     def _reset_x_movement(self):
-        """
-        Reset the x_movement of text.
-        """
-
+        """Reset the x_movement of text."""
         self._artists_x = 0
         self._album_x = 0
         self._track_x = 0
 
     def _reset_time(self):
-        """
-        Reset time variable
-        """
-
+        """Reset time variable."""
         self._time_delay = 0
 
-    def draw(self, mode, spotify, lastfm, velocity=0, delay=5):
-        """
-        Draw to screen based on current display mode.
+    def draw(self, mode, lastfm, velocity=0, delay=5):
+        """Draw to screen based on current display mode.
 
         Input:
             mode: mode of drawing, 0 full, 1 partial
-            spotify: spotify object
             lastfm: lastfm object
             velocity: velocity of moving text if needed, pixels/refresh
             delay: time to wait for new draw
         """
-
-        self._draw_text(spotify, lastfm, velocity)
-        self._draw_cover_art(spotify)
+        self._draw_text(lastfm, velocity)
+        self._draw_cover_art(lastfm)
         self._reset_x_movement()
         self._reset_time()
 
