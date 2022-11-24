@@ -11,7 +11,7 @@ def main():
     velocity = 0
 
     lastfm = LastFM()
-    lastfm.get_currently_playing()
+    lastfm.currently_playing
 
     with Screen() as screen:
         screen.draw(0, lastfm, 0, delay)
@@ -23,7 +23,7 @@ def main():
             lastfm.currently_playing
             screen.draw(0, lastfm, 0, delay)
 
-            time.sleep(0.5)
+            time.sleep(2)
 
 
 def init():
