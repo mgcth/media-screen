@@ -5,12 +5,18 @@ import time
 import requests
 import logging
 from io import BytesIO
-from waveshare_epd import epd3in7
 from media_screen.misc import CONFIG, KILO, MEGA
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 
 config = CONFIG["screen"]
+
+
+if os.path.exists(config["libdir"]):
+    sys.path.append(config["libdir"])
+
+from waveshare_epd import epd3in7
+
 
 if os.path.exists(config["libdir"]):
     sys.path.append(config["libdir"])
