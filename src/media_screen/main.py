@@ -23,7 +23,7 @@ def main():
             lastfm.currently_playing
             screen.draw(0, lastfm, 0, delay)
 
-            time.sleep(2)
+            time.sleep(30)
 
 
 def init():
