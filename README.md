@@ -3,11 +3,12 @@
 [![lint](https://github.com/mgcth/media_screen/actions/workflows/github-actions-lint.yml/badge.svg?branch=master)](https://github.com/mgcth/media_screen/actions/workflows/github-actions-lint.yml)
 ![code style](https://img.shields.io/badge/code%20style-black-black)
 
-# media screen
+# media-screen
 
 Package to show some last.fm statistics on a Raspberry Pi e-ink screen.
 
 The `config.json` file should look like:
+
 ```json
 {
     "screen": {
@@ -15,14 +16,6 @@ The `config.json` file should look like:
         "font": "path/to/font.ttf/ttc",
         "icon_liked": "https://icon.png"
     },
-    "spotify": {
-        "user": "user",
-        "clientid": "client_id",
-        "clientsecret": ""client_secret",
-        "redirecturi": "redirect_uri",
-        "scope": "comma-separated-scope",
-        "country": "ISO country code"
-    }
     "last.fm": {
         "username": "last.fm user name",
         "api_key": "api_key",
@@ -33,7 +26,7 @@ The `config.json` file should look like:
 
 ## Requirements
 
-This package works with a Waveshare e-ink display (HAT). For install instructions go to: https://www.waveshare.com/wiki/3.7inch_e-Paper_HAT. These packages are not included in the requirements.txt file.
+This package works with a Waveshare e-ink display (HAT). For install instructions go to: <https://www.waveshare.com/wiki/3.7inch_e-Paper_HAT>. These packages are not included in the requirements.txt file.
 
 ## Example
 
