@@ -87,7 +87,6 @@ class Scheduler:
             new track (True), same track (False)
         """
         new_track = self.lastfm.currently_playing
-        print(self.lastfm._track)
 
         if new_track is False:
             return new_track
