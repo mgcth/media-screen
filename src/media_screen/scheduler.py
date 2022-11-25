@@ -2,7 +2,7 @@
 import time
 from media_screen.lastfm import LastFM, Song
 
-# from media_screen.screen import Screen
+from media_screen.screen import Screen
 from media_screen.misc import KILO, MEGA
 
 DELAY = 30
@@ -76,20 +76,20 @@ class Scheduler:
 
     def run(self) -> None:
         """Scheduler run method."""
-        # with Screen() as screen:
-        while True:
-            if self.item is None:
-                new_track = self._set_track()
-                continue
+        with Screen() as screen:
+            while True:
+                if self.item is None:
+                    new_track = self._set_track()
+                    continue
 
-            if self.item.timer < 0 or self.item.delay_timer < 0:
-                new_track = self._set_track()
+                if self.item.timer < 0 or self.item.delay_timer < 0:
+                    new_track = self._set_track()
 
-            if new_track is True:
-                # screen.draw(0, self.item.song, 0, self.item._delay)
-                new_track = False
+                if new_track is True:
+                    screen.draw(0, self.item.song, 0, self.item._delay)
+                    new_track = False
 
-            time.sleep(DELAY)
+                time.sleep(DELAY)
 
     def _set_track(self) -> bool:
         """Get the current track's progress and duration and set track end time.
