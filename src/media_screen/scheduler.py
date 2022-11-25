@@ -96,7 +96,8 @@ class Scheduler:
         new_track = self.lastfm.currently_playing
 
         if new_track is False:
-            self.item.reset_delay()
+            if self.item:
+                self.item.reset_delay()
             return new_track
 
         if self.lastfm.item_ok:
