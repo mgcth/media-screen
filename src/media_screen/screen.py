@@ -70,24 +70,24 @@ class Screen:
         self._clear()
         self._sleep()
 
-    def _draw_cover_art(self, lastfm):
+    def _draw_cover_art(self, song):
         """Draw cover art.
 
         Input:
-            lastfm: lastfm object
+            song: song object
         """
         logging.info("Draw track art")
 
-        if lastfm.item_ok:
-            image = ImageOps.grayscale(lastfm.image)
+        if song:
+            image = ImageOps.grayscale(song.image)
             image.thumbnail((65, 65), Image.ANTIALIAS)
             self._image.paste(image, (235, 210))
 
-    def _draw_text(self, lastfm, velocity=0):
+    def _draw_text(self, song, velocity=0):
         """Draw music text.
 
         Input:
-            lastfm: lastfm object
+            song: song object
             velocity: velocity of moving text if needed, pixels/refresh
         """
         time_image = Image.new("1", (160, 70), 255)
@@ -100,22 +100,22 @@ class Screen:
         play_count_draw.rectangle((0, 8, 150, 70), fill=255)
 
         liked_image = Image.new("1", (65, 65), 255)
-        if lastfm.count != None:
-            play_count_draw.text((0, 8), str(lastfm.count), font=self._font60, fill=0)
+        if song.playcount != None:
+            play_count_draw.text((0, 8), str(song.playcount), font=self._font60, fill=0)
 
-            if lastfm.count > 200:
+            if song.playcount > 200:
                 liked_image.paste(self.liked_icon, (0, 0))
 
         music_image = Image.new("1", (480, 210), 255)
-        if lastfm.item_ok:
+        if song:
             music_image, self._artists_x = self._slide_music_text(
-                music_image, self._artists_x, lastfm.artists, 0, velocity
+                music_image, self._artists_x, song.artist, 0, velocity
             )
             music_image, self._album_x = self._slide_music_text(
-                music_image, self._album_x, lastfm.album, 70, velocity
+                music_image, self._album_x, song.album, 70, velocity
             )
             music_image, self._track_x = self._slide_music_text(
-                music_image, self._track_x, lastfm.track, 140, velocity
+                music_image, self._track_x, song.track, 140, velocity
             )
 
         self._image.paste(liked_image, (0, 210))
@@ -203,17 +203,17 @@ class Screen:
         """Reset time variable."""
         self._time_delay = 0
 
-    def draw(self, mode, lastfm, velocity=0, delay=5):
+    def draw(self, mode, song, velocity=0, delay=5):
         """Draw to screen based on current display mode.
 
         Input:
             mode: mode of drawing, 0 full, 1 partial
-            lastfm: lastfm object
+            song: song object
             velocity: velocity of moving text if needed, pixels/refresh
             delay: time to wait for new draw
         """
-        self._draw_text(lastfm, velocity)
-        self._draw_cover_art(lastfm)
+        self._draw_text(song, velocity)
+        self._draw_cover_art(song)
         self._reset_x_movement()
         self._reset_time()
 
