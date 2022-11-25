@@ -84,6 +84,7 @@ class Scheduler:
 
                 if new_track is True:
                     screen.draw(0, self.item.song, 0, self.item._delay)
+                    new_track = False
 
                 time.sleep(5)
 
