@@ -83,7 +83,7 @@ class Scheduler:
                     new_track = self._set_track()
 
                 if new_track is True:
-                    screen.draw(0, self.item.song, 0, self._delay)
+                    screen.draw(0, self.item.song, 0, self.item._delay)
 
                 time.sleep(5)
 
