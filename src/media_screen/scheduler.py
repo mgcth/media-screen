@@ -84,13 +84,11 @@ class Scheduler:
 
             if self.item.timer < 0 or self.item.delay_timer < 0:
                 new_track = self._set_track()
-                print("TIMER")
 
             if new_track is True:
                 # screen.draw(0, self.item.song, 0, self.item._delay)
                 new_track = False
 
-            print("DELAY")
             time.sleep(DELAY)
 
     def _set_track(self) -> bool:
