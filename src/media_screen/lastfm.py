@@ -1,13 +1,43 @@
 """Last.fm module."""
-import time
 import requests
 from PIL import Image
 from io import BytesIO
+from typing import Any
 from media_screen.misc import CONFIG
-from pylast import LastFMNetwork, User, Track, PyLastError, MalformedResponseError
+from pylast import LastFMNetwork, User, PyLastError, MalformedResponseError
 
 
 config = CONFIG["last.fm"]
+
+
+class Song:
+    """Song class"""
+
+    def __init__(
+        self,
+        title: str = "",
+        album: str = "",
+        artist: str = "",
+        image: Any = None,
+        duration: int = 0,
+        playcount: int = 0,
+    ) -> None:
+        """Initialise song.
+
+        Args:
+            title: song title
+            album: song album
+            artist: song artist
+            image: song cover image
+            duration: song duration
+            playcount: number of times song played
+        """
+        self.title = title
+        self.album = album
+        self.artist = artist
+        self.image = image
+        self.duration = duration
+        self.playcount = playcount
 
 
 class LastFM:
@@ -43,6 +73,8 @@ class LastFM:
 
         if self._track == track:
             return False
+        else:
+            self._track = track
 
         if self._track != None:
             self._set_track_details()
@@ -52,57 +84,47 @@ class LastFM:
         return True
 
     @property
-    def count(self) -> int:
-        """Get track count.
-
-        Returns:
-            times track has been played
-        """
-        return self._count
-
-    @property
     def item_ok(self) -> bool:
         """Check if item is ok to draw."""
         return self._item_ok
 
     @property
-    def track(self) -> str:
-        """Get track title."""
-        return self._track_title
+    def song(self) -> Song:
+        """Get track image url."""
+        return self._song
 
-    @property
-    def album(self) -> str:
-        """Get album title."""
-        return self._album_title
+    def _get_track_image(self, image_url) -> None:
+        """Download the track album cover image and hold it in memory.
 
-    @property
-    def artists(self) -> str:
-        """Get artists name."""
-        return self._artists_name
-
-    def _get_track_image(self) -> None:
-        """Download the track album cover image and hold it in memory."""
-        if self._item_ok:
-            response = requests.get(self._image_url)
-            self.image = Image.open(BytesIO(response.content))
+        Args:
+            image_url: image url
+        """
+        response = requests.get(image_url)
+        return Image.open(BytesIO(response.content))
 
     def _set_track_details(self) -> None:
         """Store track details in object."""
         self._item_ok = True
-        self._count = self._track.get_userplaycount()
-        self._track_title = self._track.title
-        self._album_title = self._track.get_album().title
-        self._artists_name = self._track.get_artist().name
-        self._image_url = self._track.get_cover_image()
 
-        self._get_track_image()
+        track_title = self._track.title
+        track_album = self._track.get_album().title
+        track_artist = self._track.get_artist().name
+        track_image_url = self._track.get_cover_image()
+        track_image = self._get_track_image(track_image_url)
+        track_duration = self._track.get_duration()
+        track_playcount = self._track.get_userplaycount()
+
+        self._song = Song(
+            track_title,
+            track_album,
+            track_artist,
+            track_image,
+            track_duration,
+            track_playcount,
+        )
 
     def _clear(self) -> None:
         """Clear object details."""
         self._item_ok = False
-        self._count = None
-        self._track_title = None
-        self._album_title = None
-        self._artists_name = None
-        self._image_url = None
         self._track = None
+        self._song = Song()
