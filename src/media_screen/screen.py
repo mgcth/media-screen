@@ -115,7 +115,7 @@ class Screen:
                 music_image, self._album_x, song.album, 70, velocity
             )
             music_image, self._track_x = self._slide_music_text(
-                music_image, self._track_x, song.track, 140, velocity
+                music_image, self._track_x, song.title, 140, velocity
             )
 
         self._image.paste(liked_image, (0, 210))
