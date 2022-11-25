@@ -3,8 +3,8 @@ import time
 import requests
 from PIL import Image
 from io import BytesIO
-from media_screen.misc import CONFIG, KILO, MEGA
-from pylast import LastFMNetwork, User, PyLastError, MalformedResponseError
+from media_screen.misc import CONFIG
+from pylast import LastFMNetwork, User, Track, PyLastError, MalformedResponseError
 
 
 config = CONFIG["last.fm"]
@@ -30,33 +30,24 @@ class LastFM:
             raise PyLastError("Failed to connect to last.fm")
 
     @property
-    def currently_playing(self):
+    def currently_playing(self) -> bool:
         """Get the currently playing track
 
         Returns:
-            playing track
+            new track (True), same track (False)
         """
         try:
-            self._track = self.user.get_now_playing()
+            track = self.user.get_now_playing()
         except MalformedResponseError:
             raise MalformedResponseError("Last.fm get track error.")
+
+        if self._track == track:
+            return False
 
         if self._track != None:
             self._set_track_details()
         else:
             self._clear()
-
-        return self._track
-
-    @property
-    def new_track(self):
-        """Test if new track is playing.
-
-        Returns:
-            true for new track, false for not
-        """
-        if self.user.get_now_playing() == self._track:
-            return False
 
         return True
 
@@ -114,3 +105,4 @@ class LastFM:
         self._album_title = None
         self._artists_name = None
         self._image_url = None
+        self._track = None
