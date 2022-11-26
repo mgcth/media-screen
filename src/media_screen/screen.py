@@ -78,7 +78,7 @@ class Screen:
         """
         logging.info("Draw track art")
 
-        if song:
+        if song.image:
             image = ImageOps.grayscale(song.image)
             image.thumbnail((65, 65), Image.ANTIALIAS)
             self._image.paste(image, (235, 210))
