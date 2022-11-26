@@ -54,7 +54,7 @@ class Item:
         self._delay = delay
         self._creation_time = self._get_time()
 
-        duration = self._duration if duration == 0 else duration
+        duration = self._duration if duration <= 0 else duration
 
         self._track_end_time = self._creation_time + duration
         self._time_delay = self._creation_time + self._delay
@@ -126,5 +126,4 @@ class Scheduler:
         new_track = self.lastfm.currently_playing
         duration = 0 if new_track else self.item.timer
         self.item = Item(self.lastfm.song, duration)
-
         return new_track
