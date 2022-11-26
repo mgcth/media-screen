@@ -1,6 +1,48 @@
 [build-system]
-requires = [
-    "setuptools>=42",
-    "wheel"
-]
+requires = ["setuptools", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "media-screen"
+version = "0.1.0"
+description = "Show last.fm media info on a Raspberry Pi e-ink screen."
+license = { text = "MIT" }
+readme = "README.md"
+authors = [
+    { name = "Mladen Gibanica", email = "11275336+mgcth@users.noreply.github.com" },
+]
+requires-python = ">=3.7"
+dependencies = [
+    "requests ~= 2.27",
+    "Pillow ~= 9.0",
+    "pylast ~= 5.1",
+    "numpy ~= 1.19",
+    "RPi.GPIO ~= 0.7",
+    "spidev ~= 3.5",
+]
+
+[project.optional-dependencies]
+lint = [
+    "flake8 ~= 5.0",
+    "flake8-bandit ~= 4.1",
+    "flake8-docstrings ~= 1.6",
+    "flake8-black ~= 0.3",
+]
+type = ["mypy ~= 0.990", "types-requests ~= 2.28", "pandas-stubs ~= 1.5"]
+test = ["pytest ~= 7.1", "coverage ~= 6.5", "pytest-cov ~= 4.0"]
+doc = [
+    "mkdocs ~= 1.4",
+    "mkdocs-material ~= 8.5",
+    "mkdocstrings[python] ~= 0.19",
+]
+dev = [
+    "media-screen[lint]",
+    "media-screen[type]",
+    "media-screen[test]",
+    "media-screen[doc]",
+    "black ~= 22.8",
+    "pre-commit ~= 2.20",
+]
+
+[options.packages.find]
+where = "src"
